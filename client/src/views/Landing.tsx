@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FormattedMessage, defineMessages } from 'react-intl';
 
-import BullIcon from '../assets/rising.svg';
+import BullIcon from '../assets/svgs/rising.svg';
 
 const Copy = defineMessages({
   Title: {

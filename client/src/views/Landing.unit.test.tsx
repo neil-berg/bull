@@ -1,5 +1,4 @@
 import * as React from 'react';
-// import { fireEvent, render, waitFor } from '@testing-library/react';
 import { renderWithProviders } from '../tests';
 import '@testing-library/jest-dom';
 
@@ -10,7 +9,6 @@ describe('<Landing />', () => {
     const component = renderWithProviders(<Landing />);
     const title = component.getByTestId(LandingDataTestID.Title);
     const icon = component.getByTestId(LandingDataTestID.BullIcon);
-    component.debug();
     expect(title).toBeVisible();
     expect(icon).toBeVisible();
   });

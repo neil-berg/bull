@@ -13,8 +13,8 @@ module.exports = (env) => {
       path: path.resolve(__dirname, 'dist'),
       // Root path that a browser references r
       publicPath: '/',
-      // Filename of built app, [name] is a hashed value
-      filename: '[name].js',
+      // Filename of built and bundled app
+      filename: 'app.js',
     },
     module: {
       rules: [
