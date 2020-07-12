@@ -1,0 +1,60 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    // Allows for the parsing of modern ECMAScript features
+    "ecmaVersion": 2018,
+    // Allows for the use of imports
+    "sourceType": "module",
+    "ecmaFeatures": {
+      // Allows for the parsing of JSX
+      "jsx": true
+    }
+  },
+  "rules": {
+    /* Additional general ESLint rules */
+    "prettier/prettier": ["warn"],
+    // Single quotes
+    "quotes": ["warn", "single"],
+    // Include semi colons at the end of lines
+    "semi": ["warn", "always"],
+    // Alphabetize imports
+    "sort-imports": [
+      "warn",
+      {
+        "ignoreCase": false,
+        "ignoreDeclarationSort": true,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": ["all", "multiple", "single", "none"]
+      }
+    ],
+    /* Additional Typscript-specific rules */
+    // Include semi colons at the end of lines
+    "@typescript-eslint/semi": ["warn", "always"],
+    // Disallow interface MyInterface {}
+    "@typescript-eslint/no-empty-interface": ["error"],
+    // Favor string[] over Array<string>
+    "@typescript-eslint/array-type": ["warn"],
+    // Do not need to always define function return types
+    "@typescript-eslint/explicit-function-return-type": ["off"],
+    // Allow for node-style imports: const x = require('some-module')
+    "@typescript-eslint/no-var-requires": ["off"]
+  },
+  "settings": {
+    "react": {
+      // eslint-plugin-react should auto-detect the version of React to use
+      "version": "detect"
+    }
+  },
+  "env": {
+    // Recognize node env for global variables (e.g. "require")
+    "node": true
+  }
+}
