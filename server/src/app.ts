@@ -1,21 +1,12 @@
 import * as express from 'express';
-import * as mongoose from 'mongoose';
 
+import { connectToDB } from './db/connection';
 import { User } from './db/models';
 
 const app = express();
 
-// Connect to MongoDB
-mongoose
-  .connect('mongodb://mongo:27017/docker-node-mongo-neil', {
-    useNewUrlParser: true,
-  })
-  .then(() => console.log('MongoDB Connected'))
-  .catch((err) => console.log(err));
-
 app.get('/', async (req, res) => {
-  console.log(req);
-  const newUser = new User({ name: 'Neil!' });
+  const newUser = new User({ name: 'NeilBerggg' });
   await User.create(newUser);
   res.send('New user created');
   res.status(200);
@@ -23,6 +14,7 @@ app.get('/', async (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`My server is listening at http://localhost:${PORT}`);
+app.listen(PORT, async () => {
+  await connectToDB('mongodb://mongo:27017/bull-api');
+  console.log(`Server listening at http://localhost:${PORT}`);
 });
