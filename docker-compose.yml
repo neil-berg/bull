@@ -4,12 +4,30 @@ services:
     container_name: bull-api
     restart: always
     build: ./server
+    env_file: .env
+    environment: 
+      MONGO_DATABASE: $MONGO_DATABASE
+      MONGO_USERNAME: $MONGO_USERNAME
+      MONGO_PASSWORD: $MONGO_PASSWORD
     ports:
       - '3000:3000'
     depends_on:
       - mongo
+    networks:
+      - app
   mongo:
     container_name: mongo
     image: mongo
+    env_file: .env
+    environment: 
+      MONGO_INITDB_DATABASE: $MONGO_DATABASE
+      MONGO_INITDB_ROOT_USERNAME: $MONGO_USERNAME
+      MONGO_INITDB_ROOT_PASSWORD: $MONGO_PASSWORD
     ports:
       - '27017:27017'
+    networks:
+      - app
+    volumes:
+      - ./server/src/db/init.js:/docker-entrypoint-initdb.d/init.js:ro
+networks:
+  app:

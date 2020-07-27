@@ -7,18 +7,18 @@ import * as mongoose from 'mongoose';
  * @param url {String} - MongoDB connection URL
  */
 export const connectToDB = async (url: string): Promise<any> => {
-  let retries = 5;
-  while (retries > 0) {
+  let tryAgain = true;
+  while (tryAgain) {
     try {
       await mongoose.connect(url, {
         useNewUrlParser: true,
         useCreateIndex: true,
+        family: 4,
       });
       console.log('Successfully connected to MongoDB.');
-      break;
+      tryAgain = false;
     } catch (e) {
       console.log('MongoDB connection failed, trying again.');
-      retries--;
     }
   }
 };

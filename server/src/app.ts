@@ -15,6 +15,7 @@ app.get('/', async (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
-  await connectToDB('mongodb://mongo:27017/bull-api');
+  const url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@mongo:27017/${process.env.MONGO_DATABASE}?authSource=admin`;
+  await connectToDB(url);
   console.log(`Server listening at http://localhost:${PORT}`);
 });
