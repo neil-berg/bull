@@ -1,12 +1,19 @@
 import * as express from 'express';
+import * as bodyParser from 'body-parser';
 
 import { connectToDB } from './db/connection';
 import { User } from './db/models';
 
 const app = express();
 
-app.get('/', async (req, res) => {
-  const newUser = new User({ name: 'NeilBerggg' });
+// for parsing application/json
+app.use(bodyParser.json());
+// for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.post('/api/users', async (req, res) => {
+  const name = req.body.name;
+  const newUser = new User({ name });
   await User.create(newUser);
   res.send('New user created');
   res.status(200);
@@ -15,7 +22,6 @@ app.get('/', async (req, res) => {
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, async () => {
-  const url = `mongodb://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@mongo:27017/${process.env.MONGO_DATABASE}?authSource=admin`;
-  await connectToDB(url);
+  await connectToDB();
   console.log(`Server listening at http://localhost:${PORT}`);
 });

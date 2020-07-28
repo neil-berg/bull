@@ -1,3 +1,4 @@
+const webpack = require('webpack');
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -65,7 +66,12 @@ module.exports = (env) => {
       new HtmlWebpackPlugin({
         title: 'Bull',
         template: './src/index.html',
+        favicon: './src/assets/images/rising.png',
       }),
+      // Set environmental vars
+      new webpack.DefinePlugin({
+       'process.env.API_URL': JSON.stringify(process.env.API_URL || '')
+      })
     ],
     // Increase source mapping in development
     devtool: isDev ? 'eval-source-map' : 'eval',
@@ -74,12 +80,16 @@ module.exports = (env) => {
       port: 8080,
       // Directory (built path) to serve content
       contentBase: path.join(__dirname, 'dist'),
-      // Automatically open the browser for development
-      open: true,
       // Hot reloads of modules when saving changed files
       hot: true,
       // Serve index.html on 404s
       historyApiFallback: true,
+      // Proxy API requests to the backend locally
+      proxy: {
+        '/api/**': {
+            target: 'http://localhost:3000',
+        },
+    }
     },
   };
 
