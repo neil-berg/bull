@@ -4,11 +4,11 @@
   "description": "Express server for Bull",
   "main": "server.ts",
   "scripts": {
-    "build": "tsc",
-    "clean": "rm -rf ./dist",
+    "dev": "ts-node-dev src/app.ts",
     "lint": "tsc --noEmit && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
-    "start": "node dist/app.js",
-    "watch": "ts-node-dev src/app.ts"
+    "clean": "rm -rf ./dist",
+    "build": "tsc",
+    "start": "node dist/app.js"
   },
   "keywords": [],
   "author": "Neil Berg <neil@neilberg.dev>",
