@@ -4,5 +4,5 @@
   command = "yarn build"
 [[redirects]]
   from = "/*"
-  to = "/client/dist/index.html"
+  to = "/dist/index.html"
   status = 200
