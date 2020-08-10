@@ -69,8 +69,8 @@ module.exports = (env) => {
         favicon: './src/assets/images/rising.png',
       }),
       // Set environmental vars
-      new webpack.DefinePlugin({
-       'process.env.API_URL': JSON.stringify(process.env.API_URL || '')
+      new webpack.EnvironmentPlugin({
+       API_URL: isDev ? 'http://localhost:3000' : 'https://my-bull-app.herokuapp.com'
       })
     ],
     // Increase source mapping in development

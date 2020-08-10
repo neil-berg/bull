@@ -19,13 +19,10 @@ export const enum LandingDataTestID {
 export const Landing = () => {
   const handleClick = async () => {
     try {
-      const url = 'http://localhost:3000/api/users';
+      const url = process.env.API_URL + '/api/users';
       const res = await axios.post(url, {
-        name: 'testing A1'
+        name: 'testing A3'
       })
-      // const res = await axios.post(process.env.API_URL + '/api/users', {
-      //   name: 'Neil BB'
-      // })
       console.log(res);
     } catch(e) {
       console.log(e)
