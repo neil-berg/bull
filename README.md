@@ -1,4 +1,4 @@
-Bull
+# Bull
 
 ## Development Workflow
 
@@ -10,26 +10,20 @@ Clone the repository.
 cd bull
 ```
 
-Bring up the backend (NodeJS/Express server + MongoDB) containers:
+Bring up the web client, node server, and mongo DB with
 
 ```
 docker-compose up --build
 ```
 
-Bring up the front end React app:
-
-```
-cd client
-yarn dev
-```
-
-The backend is exposed on port 3000, while the front end is on 8080.
-
-To bring down the backend containers:
+To bring down the containers:
 
 ```
 docker-compose down
 ```
+
+The web client is served at `http://localhost:8000`, and the
+node server is at `http://localhost:3000`.
 
 ## Deployment
 
