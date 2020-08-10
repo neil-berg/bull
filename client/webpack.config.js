@@ -77,7 +77,9 @@ module.exports = (env) => {
     devtool: isDev ? 'eval-source-map' : 'eval',
     devServer: {
       // Exposed port on localhost
-      port: 8080,
+      port: 8000,
+      // Host name for accessing the dev server externally
+      host: '0.0.0.0',
       // Directory (built path) to serve content
       contentBase: path.join(__dirname, 'dist'),
       // Hot reloads of modules when saving changed files

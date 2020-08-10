@@ -15,5 +15,8 @@ COPY . .
 # Build the React app
 RUN npm run build
 
+# Port to expose
+EXPOSE 8000
+
 # Launch webpack dev server when container starts
 CMD ["npm", "run", "dev"]

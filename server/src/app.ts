@@ -1,5 +1,6 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
+import * as cors from 'cors';
 
 import { connectToDB } from './db/connection';
 import { User } from './db/models';
@@ -10,6 +11,8 @@ const app = express();
 app.use(bodyParser.json());
 // for parsing application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
+// allows CORS
+app.use(cors());
 
 app.post('/api/users', async (req, res) => {
   const name = req.body.name;

@@ -29,5 +29,13 @@ services:
       - app
     volumes:
       - ./server/src/db/init.js:/docker-entrypoint-initdb.d/init.js:ro
+  client:
+    container_name: bull-client
+    restart: on-failure
+    build: ./client
+    ports:
+      - '8000:8000'
+    depends_on: 
+      - server
 networks:
   app:
