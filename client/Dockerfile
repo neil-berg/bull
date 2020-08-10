@@ -14,3 +14,6 @@ COPY . .
 
 # Build the React app
 RUN npm run build
+
+# Launch webpack dev server when container starts
+CMD ["npm", "run", "dev"]
