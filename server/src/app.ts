@@ -14,6 +14,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // allows CORS
 app.use(cors());
 
+app.get('/test', (_, res) => {
+  res.send('Updated: From Bull API');
+  res.status(200);
+});
+
 app.post('/api/users', async (req, res) => {
   const name = req.body.name;
   const newUser = new User({ name });

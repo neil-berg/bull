@@ -15,6 +15,9 @@ services:
       - mongo
     networks:
       - app
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
   mongo:
     container_name: mongo
     image: mongo
