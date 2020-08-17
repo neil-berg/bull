@@ -70,7 +70,8 @@ module.exports = (env) => {
       }),
       // Set environmental vars
       new webpack.EnvironmentPlugin({
-       API_URL: isDev ? 'http://localhost:3000' : 'https://my-bull-app.herokuapp.com'
+       API_URL: isDev ? 'http://localhost:3000' : 'https://my-bull-app.herokuapp.com',
+       FINNHUB_API_TOKEN: process.env.FINNHUB_API_TOKEN,
       })
     ],
     // Increase source mapping in development

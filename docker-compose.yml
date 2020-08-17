@@ -37,6 +37,9 @@ services:
     container_name: bull-client
     restart: on-failure
     build: ./client
+    env_file: .env
+    environment: 
+      FINNHUB_API_TOKEN: $FINNHUB_API_TOKEN
     ports:
       - '8000:8000'
     depends_on: 

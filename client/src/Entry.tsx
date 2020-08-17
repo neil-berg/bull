@@ -7,7 +7,7 @@ import { App } from './App';
 import './styles/reset.css';
 
 ReactDOM.render(
-  <IntlProvider locale={navigator.language}>
+  <IntlProvider locale={navigator.language} onError={() => {}}>
     <BrowserRouter>
       <App />
     </BrowserRouter>

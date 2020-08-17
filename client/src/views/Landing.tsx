@@ -2,6 +2,7 @@ import * as React from 'react';
 import axios from 'axios';
 import { FormattedMessage, defineMessages } from 'react-intl';
 
+import {Ticker} from '../features';
 import BullIcon from '../assets/svgs/rising.svg';
 
 const Copy = defineMessages({
@@ -17,6 +18,7 @@ export const enum LandingDataTestID {
 }
 
 export const Landing = () => {
+
   const handleClick = async () => {
     try {
       const url = process.env.API_URL + '/api/users';
@@ -40,6 +42,7 @@ export const Landing = () => {
         data-testid={LandingDataTestID.BullIcon}
       />
       <button onClick={handleClick}>Add User</button>
+      <Ticker />
     </div>
   );
 };
