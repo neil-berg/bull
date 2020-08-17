@@ -5,6 +5,7 @@ import * as cors from 'cors';
 import { connectToDB } from './db/connection';
 import { User } from './db/models';
 import { finnhub } from './finnhub-api';
+import { getStocks } from './handlers/getStocks';
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.get('/test', (_, res) => {
   res.send('Updated: From Bull API');
   res.status(200);
 });
+
+app.get('/stocks/all', getStocks);
 
 app.get('/finnhub', async (req, res) => {
   try {
