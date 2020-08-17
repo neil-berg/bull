@@ -2,7 +2,7 @@ import * as React from 'react';
 import axios from 'axios';
 import { FormattedMessage, defineMessages } from 'react-intl';
 
-import {Ticker} from '../features';
+import { Ticker } from '../features';
 import BullIcon from '../assets/svgs/rising.svg';
 
 const Copy = defineMessages({
@@ -18,18 +18,17 @@ export const enum LandingDataTestID {
 }
 
 export const Landing = () => {
-
   const handleClick = async () => {
     try {
       const url = process.env.API_URL + '/api/users';
       const res = await axios.post(url, {
-        name: 'testing A3'
-      })
+        name: 'testing A3',
+      });
       console.log(res);
-    } catch(e) {
-      console.log(e)
+    } catch (e) {
+      console.log(e);
     }
-  }
+  };
 
   return (
     <div>
