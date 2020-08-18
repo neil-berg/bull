@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-export const Ticker = () => {
+export const LiveTicker = () => {
   const ws = React.useRef<WebSocket | null>(null);
   const [lastPrice, setLastPrice] = React.useState<number | null>(null);
 

@@ -2,8 +2,9 @@ import * as React from 'react';
 import axios from 'axios';
 import { FormattedMessage, defineMessages } from 'react-intl';
 
-import { Ticker } from '../features';
+import { LiveTicker, StaticTicker } from '../features/ticker';
 import BullIcon from '../assets/svgs/rising.svg';
+import { isTradingDate } from '../util';
 
 const Copy = defineMessages({
   Title: {
@@ -41,7 +42,7 @@ export const Landing = () => {
         data-testid={LandingDataTestID.BullIcon}
       />
       <button onClick={handleClick}>Add User</button>
-      <Ticker />
+      {isTradingDate() ? <LiveTicker /> : <StaticTicker />}
     </div>
   );
 };
