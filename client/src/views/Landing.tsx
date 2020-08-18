@@ -1,7 +1,9 @@
 import * as React from 'react';
 import axios from 'axios';
 import { FormattedMessage, defineMessages } from 'react-intl';
+import { useDispatch } from 'react-redux';
 
+import { addUser, removeUser } from '../redux/actions';
 import { LiveTicker, StaticTicker } from '../features/ticker';
 import BullIcon from '../assets/svgs/rising.svg';
 import { isTradingDate } from '../util';
@@ -19,6 +21,8 @@ export const enum LandingDataTestID {
 }
 
 export const Landing = () => {
+  const dispatch = useDispatch();
+
   const handleClick = async () => {
     try {
       const url = process.env.API_URL + '/api/users';
@@ -29,6 +33,19 @@ export const Landing = () => {
     } catch (e) {
       console.log(e);
     }
+  };
+
+  const handleUserClick = () => {
+    dispatch(
+      addUser({
+        _id: 14,
+        name: 'Neil',
+        username: 'neillll',
+        email: 'neil@example.com',
+        created: new Date(),
+        updated: new Date(),
+      }),
+    );
   };
 
   return (
@@ -42,6 +59,8 @@ export const Landing = () => {
         data-testid={LandingDataTestID.BullIcon}
       />
       <button onClick={handleClick}>Add User</button>
+      <button onClick={handleUserClick}>ADD USER</button>
+      <button onClick={() => dispatch(removeUser())}>Remove USER</button>
       {isTradingDate() ? <LiveTicker /> : <StaticTicker />}
     </div>
   );
