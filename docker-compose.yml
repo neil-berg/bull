@@ -10,6 +10,7 @@ services:
       MONGO_USERNAME: $MONGO_USERNAME
       MONGO_PASSWORD: $MONGO_PASSWORD
       FINNHUB_API_TOKEN: $FINNHUB_API_TOKEN
+      NODE_ENV: $NODE_ENV
     ports:
       - '3000:3000'
     depends_on:
