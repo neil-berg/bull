@@ -22,4 +22,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Command to execute when container is initialized
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

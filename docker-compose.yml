@@ -19,6 +19,7 @@ services:
     volumes:
       - ./server:/usr/src/app
       - /usr/src/app/node_modules
+    command: yarn dev
   mongo:
     container_name: mongo
     image: mongo
@@ -47,5 +48,6 @@ services:
     volumes:
       - ./client/:/usr/src/app
       - /usr/src/app/node_modules
+    command: yarn dev
 networks:
   app:
