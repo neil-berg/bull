@@ -20,11 +20,19 @@ describe('Number formatters', () => {
   });
 
   describe('<ChangeStockPrice />', () => {
-    test('shows 2 decimal places', () => {
+    test('shows 2 decimal places by default', () => {
       const value = 123.456;
       const component = renderWithProviders(<ChangeStockPrice value={value} />);
       const change = component.getByTestId(TestID.ChangeStockPrice);
       expect(change.textContent).toStrictEqual('123.46');
+    });
+    test('shows N decimal places if specified', () => {
+      const value = 123.456;
+      const component = renderWithProviders(
+        <ChangeStockPrice value={value} numDecimals={3} />,
+      );
+      const change = component.getByTestId(TestID.ChangeStockPrice);
+      expect(change.textContent).toStrictEqual('123.456');
     });
     test('shows sign when value is negative', () => {
       const value = -123.45;
@@ -41,13 +49,21 @@ describe('Number formatters', () => {
   });
 
   describe('<PercentChangeStockPrice />', () => {
-    test('shows 2 decimal places', () => {
+    test('shows 2 decimal places by default', () => {
       const value = 0.00123;
       const component = renderWithProviders(
         <PercentChangeStockPrice value={value} />,
       );
       const change = component.getByTestId(TestID.ChangeStockPrice);
       expect(change.textContent).toStrictEqual('0.12%');
+    });
+    test('shows N decimal places if specified', () => {
+      const value = 0.00123;
+      const component = renderWithProviders(
+        <PercentChangeStockPrice value={value} numDecimals={3} />,
+      );
+      const change = component.getByTestId(TestID.ChangeStockPrice);
+      expect(change.textContent).toStrictEqual('0.123%');
     });
     test('shows sign when value is negative', () => {
       const value = -0.01234;

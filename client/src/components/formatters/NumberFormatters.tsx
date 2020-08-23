@@ -35,8 +35,8 @@ export const ChangeStockPrice = (props: ChangeStockPriceProps) => {
       <FormattedNumber
         value={props.value}
         style='decimal'
-        minimumFractionDigits={2}
-        maximumFractionDigits={2}
+        minimumFractionDigits={props.numDecimals ? props.numDecimals : 2}
+        maximumFractionDigits={props.numDecimals ? props.numDecimals : 2}
       />
     </span>
   );
@@ -55,8 +55,8 @@ export const PercentChangeStockPrice = (
       <FormattedNumber
         value={props.value}
         style='percent'
-        minimumFractionDigits={2}
-        maximumFractionDigits={2}
+        minimumFractionDigits={props.numDecimals ? props.numDecimals : 2}
+        maximumFractionDigits={props.numDecimals ? props.numDecimals : 2}
       />
     </span>
   );
