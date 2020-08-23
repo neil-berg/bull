@@ -4,7 +4,7 @@ import * as cors from 'cors';
 
 import { User } from './db/models';
 import { finnhub } from './finnhub-api';
-import { getStocks } from './handlers/getStocks';
+import { getTickerStocks } from './handlers/getTickerStocks';
 
 export const app = express();
 
@@ -20,7 +20,7 @@ app.get('/test', (_, res) => {
   res.status(200);
 });
 
-app.get('/stocks/all', getStocks);
+app.get('/stocks/ticker', getTickerStocks);
 
 app.get('/finnhub', async (req, res) => {
   try {
