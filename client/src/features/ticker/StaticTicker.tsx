@@ -15,7 +15,6 @@ const enum Classes {
   StockContainer = 'ticker-stock-container',
   StockContainerRow = 'ticker-stock-container-row',
   StockSymbol = 'ticker-stock-symbol',
-  StockCurrentPrince = 'ticker-stock-currentp-price',
 }
 
 export const StaticTicker = () => {
