@@ -7,6 +7,7 @@ import {
   ChangeStockPrice,
   PercentChangeStockPrice,
   StockPrice,
+  TextSpan,
 } from '../../components';
 import { StaticTickerResp } from '../../types';
 
@@ -42,9 +43,18 @@ export const StaticTicker = () => {
           const change = s.currentPrice - s.previousClosePrice;
           const percentChange = change / s.previousClosePrice;
           return (
-            <div key={s.symbol} className={Classes.StockContainer}>
+            <div
+              key={s.symbol}
+              className={Classes.StockContainer}
+              style={{
+                background:
+                  change > 0
+                    ? 'linear-gradient(45deg, #00f986, #ccffda)'
+                    : 'linear-gradient(45deg, #ef3694, #ffd2e9)',
+              }}
+            >
               <div className={Classes.StockContainerRow}>
-                <span className={Classes.StockSymbol}>{s.symbol}</span>
+                <TextSpan className={Classes.StockSymbol}>{s.symbol}</TextSpan>
                 <StockPrice value={s.currentPrice} />
               </div>
               <div className={Classes.StockContainerRow}>
@@ -63,28 +73,34 @@ export const StaticTicker = () => {
   ) : (
     <StyledStaticTicker>
       <Ticker>{() => renderTicker()}</Ticker>
+      {/* {renderTicker()} */}
     </StyledStaticTicker>
   );
 };
 
 const StyledStaticTicker = styled.div`
-  height: 80px;
-  background: lightgrey;
-
   .${Classes.TickerContainer} {
     display: flex;
+    padding: 12px 0;
+    background: black;
+    display: flex;
+    justify-content: center;
   }
 
   .${Classes.StockContainer} {
-    border: 2px grey solid;
-    border-radius: 4px;
-    min-width: 200px;
-    max-width: 200px;
+    min-width: 160px;
+    margin-right: 6px;
+    padding: 6px;
   }
 
   .${Classes.StockContainerRow} {
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  .${Classes.StockSymbol} {
+    font-size: 20px;
+    color: white;
   }
 `;
