@@ -23,5 +23,5 @@ export const TextSpan = (props: React.PropsWithChildren<Props>) => {
 
 const StyledTextSpan = styled.span`
   font-size: 14px;
-  color: ${Colors.white};
+  color: ${Colors.black};
 `;

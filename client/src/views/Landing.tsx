@@ -2,14 +2,16 @@ import * as React from 'react';
 import styled from 'styled-components';
 import axios from 'axios';
 import { FormattedMessage, defineMessages } from 'react-intl';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { addUser, removeUser } from '../redux/actions';
+import { StoreState } from '../redux/store';
 import {
   LiveTicker,
   PlaceholderTicker,
+  SignInForm,
   StaticTicker,
-} from '../features/ticker';
+} from '../features';
 import BullIcon from '../assets/svgs/rising.svg';
 import { isTradingDate } from '../util';
 import { Colors } from '../styles';
@@ -41,6 +43,7 @@ const enum Classes {
 }
 
 export const Landing = () => {
+  const user = useSelector((state: StoreState) => state.user);
   const dispatch = useDispatch();
 
   const handleClick = async () => {
@@ -59,9 +62,7 @@ export const Landing = () => {
     dispatch(
       addUser({
         _id: 14,
-        name: 'Neil',
         username: 'neillll',
-        email: 'neil@example.com',
         created: new Date(),
         updated: new Date(),
       }),
@@ -70,6 +71,7 @@ export const Landing = () => {
 
   return (
     <StyledLanding>
+      <PlaceholderTicker />
       <div className={Classes.HeadingContainer}>
         <Heading
           size='xl'
@@ -90,19 +92,19 @@ export const Landing = () => {
           <FormattedMessage {...Copy.Tagline} />
         </Heading>
       </div>
-      <PlaceholderTicker />
+
       <button onClick={handleClick}>Add User</button>
       <button onClick={handleUserClick}>ADD USER</button>
       <button onClick={() => dispatch(removeUser())}>Remove USER</button>
       {/* {isTradingDate() ? <LiveTicker /> : <StaticTicker />} */}
+      {user._id ? <h1>MY STOCKS TODO</h1> : <SignInForm />}
     </StyledLanding>
   );
 };
 
 const StyledLanding = styled.div`
-  background-color: ${Colors.backgroundBlack};
-
   .${Classes.HeadingContainer} {
+    background-color: ${Colors.backgroundBlack};
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -118,5 +120,9 @@ const StyledLanding = styled.div`
     width: 100px;
     height: 100px;
     margin: 20px 0;
+
+    > * {
+      fill: ${Colors.mintGreen};
+    }
   }
 `;

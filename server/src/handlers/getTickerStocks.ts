@@ -15,7 +15,6 @@ interface Stock {
 type StockResp = { data: Stock };
 type GetStocksResp = StockResp[];
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const getTickerStocks = async (req: Request, res: Response) => {
   const makeRequestURLs = (symbol: string) =>
     finnhub.get(`quote?symbol=${symbol}`);

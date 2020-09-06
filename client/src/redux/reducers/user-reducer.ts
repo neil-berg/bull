@@ -4,9 +4,7 @@ import { StoreState } from '../store';
 
 const initialState: StoreState['user'] = {
   _id: null,
-  name: '',
   username: '',
-  email: '',
   created: null,
   updated: null,
 };

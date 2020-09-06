@@ -43,6 +43,7 @@
     "@typescript-eslint/array-type": ["warn"],
     // Do not need to always define function return types
     "@typescript-eslint/explicit-function-return-type": ["off"],
+    "@typescript-eslint/explicit-module-boundary-types": ["off"],
     // Allow for node-style imports: const x = require('some-module')
     "@typescript-eslint/no-var-requires": ["off"]
   },

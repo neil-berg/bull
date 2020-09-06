@@ -4,7 +4,7 @@ import * as cors from 'cors';
 
 import { User } from './db/models';
 import { finnhub } from './finnhub-api';
-import { getTickerStocks } from './handlers/getTickerStocks';
+import * as handlers from './handlers';
 
 export const app = express();
 
@@ -20,7 +20,11 @@ app.get('/test', (_, res) => {
   res.status(200);
 });
 
-app.get('/stocks/ticker', getTickerStocks);
+// Sign in a user given their user name and password
+app.post('/signin', handlers.signInUser);
+
+// Get all real-time or latest stocks for the ticker
+app.get('/stocks/ticker', handlers.getTickerStocks);
 
 app.get('/finnhub', async (req, res) => {
   try {

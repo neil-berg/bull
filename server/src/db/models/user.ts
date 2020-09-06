@@ -1,11 +1,17 @@
 import * as mongoose from 'mongoose';
 
 export interface UserDoc extends mongoose.Document {
-  name: string;
+  userName: string;
+  password: string;
+  created: Date;
+  updated: Date;
 }
 
 const userSchema = new mongoose.Schema({
-  name: String,
+  userName: String,
+  password: String,
+  created: Date,
+  updated: Date,
 });
 
 export const User = mongoose.model<UserDoc>('User', userSchema);

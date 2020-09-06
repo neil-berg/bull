@@ -5,9 +5,7 @@ import { StoreState } from './store';
 
 export interface User {
   _id: number | null;
-  name: string;
   username: string;
-  email: string;
   created: Date | null;
   updated: Date | null;
 }
