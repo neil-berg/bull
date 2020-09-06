@@ -3,20 +3,21 @@ FROM node:10
 # Creating the working directory in the container
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json into the working dir (.)
-COPY package*.json ./
+# Copy package.json and yarn-lock files into the working dir (.)
+COPY package.json ./
+COPY yarn.lock ./
 
 # Install the dependencies
-RUN npm install
+RUN yarn install
 
 # Copy over the app into the working dir
 COPY . .
 
 # Build the React app
-RUN npm run build
+RUN yarn build
 
 # Port to expose
 EXPOSE 8000
 
 # Launch webpack dev server when container starts
-CMD ["npm", "run", "dev"]
+CMD ["yarn", "dev"]

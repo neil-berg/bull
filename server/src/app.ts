@@ -1,6 +1,8 @@
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
+import * as bcrypt from 'bcrypt';
+import * as jwt from 'jsonwebtoken';
 
 import { User } from './db/models';
 import { finnhub } from './finnhub-api';
@@ -16,8 +18,28 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.get('/test', (_, res) => {
-  res.send('Updated again: From Bull API');
+  res.send('From Bull API!');
   res.status(200);
+});
+
+// Create a new user and send back a JWT as an httpOnly
+// cookie for future authenticated requests
+app.post('/api/users/create', async (req, res) => {
+  const { email, password, userName } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 8);
+  const user = new User({ email, userName, password: hashedPassword });
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, {
+    expiresIn: '7 days',
+  });
+  try {
+    await User.create(user);
+    res.cookie('jwt', token, { httpOnly: true, expires: new Date() });
+    res.send({ userName });
+    res.status(201);
+  } catch (e) {
+    res.send(e);
+    res.status(400);
+  }
 });
 
 // Sign in a user given their user name and password

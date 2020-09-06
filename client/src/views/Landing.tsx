@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addUser, removeUser } from '../redux/actions';
 import { StoreState } from '../redux/store';
 import {
+  CreateAccountForm,
   LiveTicker,
   PlaceholderTicker,
   SignInForm,
@@ -97,7 +98,7 @@ export const Landing = () => {
       <button onClick={handleUserClick}>ADD USER</button>
       <button onClick={() => dispatch(removeUser())}>Remove USER</button>
       {/* {isTradingDate() ? <LiveTicker /> : <StaticTicker />} */}
-      {user._id ? <h1>MY STOCKS TODO</h1> : <SignInForm />}
+      {user._id ? <h1>MY STOCKS TODO</h1> : <CreateAccountForm />}
     </StyledLanding>
   );
 };

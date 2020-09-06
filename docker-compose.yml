@@ -1,4 +1,5 @@
 version: '3'
+
 services:
   server:
     container_name: bull-api
@@ -11,6 +12,7 @@ services:
       MONGO_PASSWORD: $MONGO_PASSWORD
       FINNHUB_API_TOKEN: $FINNHUB_API_TOKEN
       NODE_ENV: $NODE_ENV
+      JWT_SECRET: $JWT_SECRET
     ports:
       - '3000:3000'
     depends_on:
@@ -21,6 +23,7 @@ services:
       - ./server:/usr/src/app
       - /usr/src/app/node_modules
     command: yarn dev
+
   mongo:
     container_name: mongo
     image: mongo
@@ -35,6 +38,7 @@ services:
       - app
     volumes:
       - ./server/src/db/init.js:/docker-entrypoint-initdb.d/init.js:ro
+
   client:
     container_name: bull-client
     restart: on-failure
@@ -50,5 +54,6 @@ services:
       - ./client/:/usr/src/app
       - /usr/src/app/node_modules
     command: yarn dev
+
 networks:
   app:
