@@ -7,6 +7,7 @@ import * as jwt from 'jsonwebtoken';
 import { User } from './db/models';
 import { finnhub } from './finnhub-api';
 import * as handlers from './handlers';
+import { ErrorCode } from './types';
 
 export const app = express();
 
@@ -23,22 +24,35 @@ app.get('/test', (_, res) => {
 });
 
 // Create a new user and send back a JWT as an httpOnly
-// cookie for future authenticated requests
+// session cookie for future authenticated requests
 app.post('/api/users/create', async (req, res) => {
   const { email, password, userName } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 8);
-  const user = new User({ email, userName, password: hashedPassword });
-  const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET, {
-    expiresIn: '7 days',
-  });
+
+  let errorCode = ErrorCode.UNABLE_TO_CREATE_USER;
   try {
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      errorCode = ErrorCode.EMAIL_ALREADY_TAKEN;
+      throw new Error('Email taken');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 8);
+    const user = new User({ email, userName, password: hashedPassword });
+    const token = jwt.sign(
+      { id: user._id.toString() },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '7 days',
+      },
+    );
+
     await User.create(user);
     res.cookie('jwt', token, { httpOnly: true, expires: new Date() });
-    res.send({ userName });
     res.status(201);
+    res.send({ id: user._id.toString() });
   } catch (e) {
-    res.send(e);
-    res.status(400);
+    res.status(500);
+    res.send({ error: e, errorCode });
   }
 });
 

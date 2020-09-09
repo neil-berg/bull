@@ -1,4 +1,4 @@
-import { User } from '../store/types';
+import { User } from '../../types';
 
 /** User action types */
 export const ADD_USER = 'user/add';

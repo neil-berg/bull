@@ -3,7 +3,7 @@ import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
 
 import { rootReducer } from '../reducers';
-import { User } from './types';
+import { User } from '../../types';
 
 export interface StoreState {
   user: User;

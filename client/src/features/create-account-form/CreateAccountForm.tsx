@@ -2,9 +2,12 @@ import * as React from 'react';
 import axios from 'axios';
 import styled from 'styled-components';
 import { FormattedMessage, defineMessages } from 'react-intl';
+import { useDispatch } from 'react-redux';
 
 import { TextSpan } from '../../components';
 import { Colors } from '../../styles';
+import { addUser } from '../../redux/actions';
+import { CreateUserResp, ErrorCode } from '../../types';
 
 const Copy = defineMessages({
   ErrorInvalidUserName: {
@@ -14,6 +17,14 @@ const Copy = defineMessages({
   ErrorInvalidPassword: {
     id: 'ErrorInvalidPassword',
     defaultMessage: 'Password must be more than 8 characters',
+  },
+  ErrorCreatingUser: {
+    id: 'ErrorCreatingUser',
+    defaultMessage: 'Unable to create account. Try again.',
+  },
+  ErrorEmailTaken: {
+    id: 'ErrorEmailTaken',
+    defaultMessage: 'Email already taken.',
   },
 });
 
@@ -25,10 +36,18 @@ export const CreateAccountForm = () => {
   const [email, setEmail] = React.useState('');
   const [userName, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const [errorMessage, setErrorMessage] = React.useState<JSX.Element | null>(
-    null,
-  );
+  const [errorMessage, setErrorMessage] = React.useState<
+    JSX.Element | string | null
+  >(null);
   const [processSubmit, setProcessSubmit] = React.useState(false);
+  const dispatch = useDispatch();
+
+  const clearFields = () => {
+    setEmail('');
+    setUserName('');
+    setPassword('');
+    setErrorMessage(null);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,17 +59,21 @@ export const CreateAccountForm = () => {
     } else {
       try {
         const url = process.env.API_URL + '/api/users/create';
-        const res = await axios.post(url, {
+        const res: { data: CreateUserResp } = await axios.post(url, {
           email,
           userName,
           password,
         });
-        console.log(res);
+        dispatch(addUser({ id: res.data.id, userName }));
+        clearFields();
+        setProcessSubmit(false);
       } catch (e) {
-        console.log(e);
+        e.response.data.errorCode === ErrorCode.EMAIL_ALREADY_TAKEN
+          ? setErrorMessage(<FormattedMessage {...Copy.ErrorEmailTaken} />)
+          : setErrorMessage(<FormattedMessage {...Copy.ErrorCreatingUser} />);
+        setProcessSubmit(false);
       }
     }
-    setProcessSubmit(false);
   };
 
   return (

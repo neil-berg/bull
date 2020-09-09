@@ -62,10 +62,8 @@ export const Landing = () => {
   const handleUserClick = () => {
     dispatch(
       addUser({
-        _id: 14,
-        username: 'neillll',
-        created: new Date(),
-        updated: new Date(),
+        id: '123',
+        userName: 'neillll',
       }),
     );
   };
@@ -98,7 +96,7 @@ export const Landing = () => {
       <button onClick={handleUserClick}>ADD USER</button>
       <button onClick={() => dispatch(removeUser())}>Remove USER</button>
       {/* {isTradingDate() ? <LiveTicker /> : <StaticTicker />} */}
-      {user._id ? <h1>MY STOCKS TODO</h1> : <CreateAccountForm />}
+      {user.id ? <h1>MY STOCKS TODO</h1> : <CreateAccountForm />}
     </StyledLanding>
   );
 };

@@ -3,10 +3,8 @@ import { ADD_USER, REMOVE_USER, UserActionTypes } from '../actions';
 import { StoreState } from '../store';
 
 const initialState: StoreState['user'] = {
-  _id: null,
-  username: '',
-  created: null,
-  updated: null,
+  id: '',
+  userName: '',
 };
 
 export const userReducer = (
