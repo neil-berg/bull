@@ -9,6 +9,13 @@ export interface StoreState {
   user: User;
 }
 
+export const initialState: StoreState = {
+  user: {
+    id: '',
+    userName: '',
+  },
+};
+
 // Add redux devtools in development
 const middleware =
   process.env.NODE_ENV === 'development'

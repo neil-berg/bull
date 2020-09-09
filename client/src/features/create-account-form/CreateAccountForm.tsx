@@ -26,10 +26,22 @@ const Copy = defineMessages({
     id: 'ErrorEmailTaken',
     defaultMessage: 'Email already taken.',
   },
+  Submit: {
+    id: 'Submit',
+    defaultMessage: 'Submit',
+  },
 });
 
 const enum Classes {
   ErrorMessage = 'create-account-form-error-message',
+}
+
+export const enum CreateAccountFormTestID {
+  Form = 'create-account-form',
+  EmailInput = 'create-account-form-email-input',
+  UserNameInput = 'create-account-form-username-input',
+  PasswordInput = 'create-account-form-password-input',
+  SubmitButton = 'create-account-form-submit-button',
 }
 
 export const CreateAccountForm = () => {
@@ -49,35 +61,45 @@ export const CreateAccountForm = () => {
     setErrorMessage(null);
   };
 
+  const MIN_PASSWORD_LENGTH = 8;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setProcessSubmit(true);
+
     if (userName.length === 0) {
       setErrorMessage(<FormattedMessage {...Copy.ErrorInvalidUserName} />);
-    } else if (password.length < 8) {
+      setProcessSubmit(false);
+    }
+
+    if (password.length < MIN_PASSWORD_LENGTH) {
       setErrorMessage(<FormattedMessage {...Copy.ErrorInvalidPassword} />);
-    } else {
-      try {
-        const url = process.env.API_URL + '/api/users/create';
-        const res: { data: CreateUserResp } = await axios.post(url, {
-          email,
-          userName,
-          password,
-        });
-        dispatch(addUser({ id: res.data.id, userName }));
-        clearFields();
-        setProcessSubmit(false);
-      } catch (e) {
-        e.response.data.errorCode === ErrorCode.EMAIL_ALREADY_TAKEN
-          ? setErrorMessage(<FormattedMessage {...Copy.ErrorEmailTaken} />)
-          : setErrorMessage(<FormattedMessage {...Copy.ErrorCreatingUser} />);
-        setProcessSubmit(false);
-      }
+      setProcessSubmit(false);
+    }
+
+    try {
+      const url = process.env.API_URL + '/api/users/create';
+      const res: { data: CreateUserResp } = await axios.post(url, {
+        email,
+        userName,
+        password,
+      });
+      dispatch(addUser({ id: res.data.id, userName }));
+      clearFields();
+      setProcessSubmit(false);
+    } catch (e) {
+      e.response.data.errorCode === ErrorCode.EMAIL_ALREADY_TAKEN
+        ? setErrorMessage(<FormattedMessage {...Copy.ErrorEmailTaken} />)
+        : setErrorMessage(<FormattedMessage {...Copy.ErrorCreatingUser} />);
+      setProcessSubmit(false);
     }
   };
 
   return (
-    <StyledCreateAccountForm onSubmit={(e) => handleSubmit(e)}>
+    <StyledCreateAccountForm
+      onSubmit={(e) => handleSubmit(e)}
+      data-testid={CreateAccountFormTestID.Form}
+    >
       <label htmlFor='email'>Email</label>
       <input
         type='email'
@@ -87,6 +109,7 @@ export const CreateAccountForm = () => {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
+        data-testid={CreateAccountFormTestID.EmailInput}
       />
       <label htmlFor='username'>User Name</label>
       <input
@@ -97,6 +120,7 @@ export const CreateAccountForm = () => {
         value={userName}
         onChange={(e) => setUserName(e.target.value)}
         required
+        data-testid={CreateAccountFormTestID.UserNameInput}
       />
       <label htmlFor='password'>Password</label>
       <input
@@ -107,6 +131,7 @@ export const CreateAccountForm = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
+        data-testid={CreateAccountFormTestID.PasswordInput}
       />
       {errorMessage ? (
         <TextSpan className={Classes.ErrorMessage}>{errorMessage}</TextSpan>
@@ -119,8 +144,11 @@ export const CreateAccountForm = () => {
         style={{
           cursor: processSubmit ? 'auto' : 'pointer',
         }}
+        data-testid={CreateAccountFormTestID.SubmitButton}
       >
-        Submit
+        <TextSpan>
+          <FormattedMessage {...Copy.Submit} />
+        </TextSpan>
       </button>
     </StyledCreateAccountForm>
   );
