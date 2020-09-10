@@ -24,4 +24,5 @@ export type StaticTickerResp = Stock[];
 export const enum ErrorCode {
   EMAIL_ALREADY_TAKEN = 0,
   UNABLE_TO_CREATE_USER = 1,
+  INVALID_CREDENTIALS = 2,
 }

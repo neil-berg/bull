@@ -10,6 +10,8 @@ interface Props {
   'data-testid'?: string;
   // Inline styles
   style?: React.CSSProperties;
+  // On click handler
+  onClick?: (e: React.MouseEvent<HTMLSpanElement, MouseEvent>) => void;
 }
 
 /**
