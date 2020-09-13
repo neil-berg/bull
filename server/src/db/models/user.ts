@@ -4,6 +4,7 @@ export interface UserDoc extends mongoose.Document {
   email: string;
   userName: string;
   password: string;
+  token: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,6 +25,9 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
+    },
+    token: {
+      type: String,
     },
   },
   {

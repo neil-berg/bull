@@ -1,11 +1,11 @@
 import * as React from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { useDispatch } from 'react-redux';
 
 import { AccountForm, TextSpan } from '../../components';
 import { addUser } from '../../redux/actions';
-import { CreateUserResp, ErrorCode } from '../../types';
+import { ErrorCode, User } from '../../types';
 
 const Copy = defineMessages({
   ErrorInvalidUserName: {
@@ -79,7 +79,7 @@ export const RegisterForm = () => {
 
     try {
       const url = process.env.API_URL + '/api/users/create';
-      const res: { data: CreateUserResp } = await axios.post(url, {
+      const res = await axios.post<User>(url, {
         email,
         userName,
         password,
@@ -88,7 +88,8 @@ export const RegisterForm = () => {
       clearFields();
       setProcessSubmit(false);
     } catch (e) {
-      e.response.data.errorCode === ErrorCode.EMAIL_ALREADY_TAKEN
+      const err: AxiosError<{ errorCode: number }> = e;
+      err.response.data.errorCode === ErrorCode.EMAIL_ALREADY_TAKEN
         ? setErrorMessage(<FormattedMessage {...Copy.ErrorEmailTaken} />)
         : setErrorMessage(<FormattedMessage {...Copy.ErrorCreatingUser} />);
       setProcessSubmit(false);

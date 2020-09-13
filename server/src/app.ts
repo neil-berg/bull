@@ -2,11 +2,11 @@ import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import * as cors from 'cors';
 import * as bcrypt from 'bcrypt';
-import * as jwt from 'jsonwebtoken';
 
 import { User } from './db/models';
 import { finnhub } from './finnhub-api';
 import * as handlers from './handlers';
+import * as util from './util';
 import { ErrorCode } from './types';
 
 export const app = express();
@@ -38,13 +38,8 @@ app.post('/api/users/create', async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 8);
     const user = new User({ email, userName, password: hashedPassword });
-    const token = jwt.sign(
-      { id: user._id.toString() },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: '7 days',
-      },
-    );
+    const token = util.generateToken(user._id.toString());
+    user.token = token;
 
     await User.create(user);
     res.cookie('jwt', token, { httpOnly: true, expires: new Date() });
@@ -56,8 +51,33 @@ app.post('/api/users/create', async (req, res) => {
   }
 });
 
-// Sign in a user given their user name and password
-app.post('/signin', handlers.signInUser);
+// Sign in an existing user and update their session token
+app.post('/api/users/signin', async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      throw new Error('Unable to signin user');
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      throw new Error('Unable to signin user');
+    }
+
+    const token = util.generateToken(user._id.toString());
+
+    // Update their session token
+    await User.findByIdAndUpdate(user._id, { token });
+    res.cookie('jwt', token, { httpOnly: true, expires: new Date() });
+    res.status(201);
+    res.send({ id: user._id.toString(), userName: user.userName });
+  } catch (e) {
+    res.status(400);
+    res.send({ error: e, errorCode: ErrorCode.UNABLE_TO_SIGNIN_USER });
+  }
+});
 
 // Get all real-time or latest stocks for the ticker
 app.get('/stocks/ticker', handlers.getTickerStocks);
@@ -71,12 +91,4 @@ app.get('/finnhub', async (req, res) => {
     console.log(`Error: ${e}`);
     res.send(400);
   }
-});
-
-app.post('/api/users', async (req, res) => {
-  const name = req.body.name;
-  const newUser = new User({ name });
-  await User.create(newUser);
-  res.send('New user created');
-  res.status(200);
 });

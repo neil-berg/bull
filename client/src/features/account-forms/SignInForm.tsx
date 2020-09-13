@@ -1,11 +1,11 @@
 import * as React from 'react';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { useDispatch } from 'react-redux';
 
 import { addUser } from '../../redux/actions';
 import { AccountForm, TextSpan } from '../../components';
-import { ErrorCode } from '../../types';
+import { ErrorCode, User } from '../../types';
 
 const Copy = defineMessages({
   WelcomeBack: {
@@ -14,7 +14,7 @@ const Copy = defineMessages({
   },
   ErrorInvalidCredetials: {
     id: 'ErrorInvalidCredentials',
-    defaultMessage: 'Incorrect username or password.',
+    defaultMessage: 'Incorrect credentials.',
   },
   ErrorGeneric: {
     id: 'ErrorGenericSignIn',
@@ -39,7 +39,7 @@ export const enum SignInFormTestID {
 }
 
 export const SignInForm = () => {
-  const [userName, setUserName] = React.useState('');
+  const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [errorMessage, setErrorMessage] = React.useState<JSX.Element | null>(
     null,
@@ -53,15 +53,16 @@ export const SignInForm = () => {
 
     try {
       const url = process.env.API_URL + '/api/users/signin';
-      const res = await axios.post(url, {
-        userName,
+      const res = await axios.post<User>(url, {
+        email,
         password,
       });
-      dispatch(addUser({ id: res.data.id, userName }));
+      dispatch(addUser({ id: res.data.id, userName: res.data.userName }));
 
       setProcessSubmit(false);
     } catch (e) {
-      e.response.data.errorCode === ErrorCode.INVALID_CREDENTIALS
+      const err = e as AxiosError<{ errorCode: number }>;
+      err.response.data.errorCode === ErrorCode.INVALID_CREDENTIALS
         ? setErrorMessage(<FormattedMessage {...Copy.ErrorInvalidCredetials} />)
         : setErrorMessage(<FormattedMessage {...Copy.ErrorGeneric} />);
       setProcessSubmit(false);
@@ -83,14 +84,14 @@ export const SignInForm = () => {
       >
         <FormattedMessage {...Copy.WelcomeBack} />
       </TextSpan>
-      <label htmlFor='username'>User Name</label>
+      <label htmlFor='email'>Email</label>
       <input
-        type='text'
-        id='username'
-        placeholder='Enter user name'
-        autoComplete='username'
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
+        type='email'
+        id='email'
+        placeholder='Enter email'
+        autoComplete='email'
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
         data-testid={SignInFormTestID.UserNameInput}
       />
       <label htmlFor='password'>Password</label>
