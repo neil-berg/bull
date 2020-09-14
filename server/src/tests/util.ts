@@ -1,22 +1,25 @@
 import * as mongoose from 'mongoose';
-import * as jwt from 'jsonwebtoken';
 
 import { User } from '../db/models/user';
 
-// Create a test user with a real object ID
-// and JWT and sample data for remaining properites
-export const testUserId = new mongoose.Types.ObjectId();
-export const testToken = jwt.sign({ _id: testUserId }, 'some secret');
-export const testUser = {
-  _id: testUserId,
-  name: 'Test User One',
-  email: 'testUserOne@example.com',
-  password: 'red1234!',
-  token: testToken,
-};
+export async function connectDB() {
+  try {
+    await mongoose.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+    });
+    return;
+  } catch (e) {
+    console.error(e);
+    process.exit(1);
+  }
+}
 
-// Setup a fresh test DB with one test user populated
-export async function setupDatabase() {
+export function disconnectDB() {
+  mongoose.connection.close();
+}
+
+export async function cleanDB() {
   await User.deleteMany({});
-  await new User(testUser).save();
 }

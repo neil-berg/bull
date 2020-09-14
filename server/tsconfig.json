@@ -8,5 +8,5 @@
     "target": "es6",
     "allowJs": false
   },
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["dist", "node_modules", "src/tests/**/*.ts"]
 }

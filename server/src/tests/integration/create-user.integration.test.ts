@@ -1,46 +1,90 @@
 import * as request from 'supertest';
-import * as mongoose from 'mongoose';
 
-import * as util from '../../util';
 import { app } from '../../app';
 import { User } from '../../db/models';
-// import { setupDatabase, testUser, testUserId } from '../util';
-// import { setupDatabase } from '../util';
+import * as util from '../../util';
+import { cleanDB, connectDB, disconnectDB } from '../util';
 
-// const {MongoClient} = require('mongodb');
+describe('Create user - POST /api/users/create', () => {
+  const testToken = 'token-123';
 
-describe('insert', () => {
   beforeAll(async () => {
-    // Setup the in-memory MongoDB
-    await mongoose.connect(
-      process.env.MONGO_URL,
-      { useNewUrlParser: true, useCreateIndex: true },
-      (err) => {
-        if (err) {
-          console.error(err);
-          process.exit(1);
-        }
-      },
-    );
-    // Mocks
-    jest.spyOn(util, 'generateToken').mockReturnValue('token-abc');
+    await connectDB();
+    jest.spyOn(util, 'generateToken').mockReturnValue(testToken);
+  });
+
+  beforeEach(async () => {
+    await cleanDB();
   });
 
   afterAll(() => {
-    mongoose.connection.close();
+    disconnectDB();
     jest.restoreAllMocks();
   });
 
-  test('creates a new user', async () => {
-    const response = await request(app).post('/api/users/create/').send({
-      email: 'neil@example.com',
-      password: 'red1234!',
-      userName: 'neilberg',
-    });
+  const testUser = {
+    email: 'test@example.com',
+    password: 'abc1234',
+    userName: 'testUserName',
+  };
+
+  test('creates a new user and returns a token cookie', async () => {
+    const response = await request(app)
+      .post('/api/users/create/')
+      .send(testUser);
 
     expect(response.status).toBe(201);
-    // Assert that database was changed correctly
+    expect(response.headers['set-cookie'][0]).toContain(`jwt=${testToken}`);
+
     const user = await User.findById(response.body.id);
     expect(user).not.toBeNull();
+  });
+
+  test('does not create a user if email is taken', async () => {
+    const existingUser = new User(testUser);
+    await User.create(existingUser);
+
+    const response = await request(app)
+      .post('/api/users/create/')
+      .send(testUser);
+
+    expect(response.status).toBe(500);
+
+    // Should still just be 1 user with this email
+    const users = await User.find({ email: testUser.email });
+    expect(users).toHaveLength(1);
+  });
+
+  test('does not create a user if missing email', async () => {
+    const response = await request(app)
+      .post('/api/users/create/')
+      .send({ ...testUser, email: null });
+
+    expect(response.status).toBe(500);
+
+    const users = await User.find();
+    expect(users).toHaveLength(0);
+  });
+
+  test('does not create a user if missing password', async () => {
+    const response = await request(app)
+      .post('/api/users/create/')
+      .send({ ...testUser, password: null });
+
+    expect(response.status).toBe(500);
+
+    const users = await User.find();
+    expect(users).toHaveLength(0);
+  });
+
+  test('does not create a user if missing username', async () => {
+    const response = await request(app)
+      .post('/api/users/create/')
+      .send({ ...testUser, userName: null });
+
+    expect(response.status).toBe(500);
+
+    const users = await User.find();
+    expect(users).toHaveLength(0);
   });
 });
