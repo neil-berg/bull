@@ -4,6 +4,7 @@ import { FormattedMessage, defineMessages } from 'react-intl';
 
 import { TextSpan } from '../../components';
 import { RegisterForm, SignInForm } from './';
+import { Colors } from '../../styles';
 
 const Copy = defineMessages({
   RegisterPrompt: {
@@ -29,7 +30,7 @@ const enum Classes {
 }
 
 export const AccountFormToggle = () => {
-  const [showSignInForm, setShowSignInForm] = React.useState(true);
+  const [showSignInForm, setShowSignInForm] = React.useState(false);
 
   return (
     <StyledAccountFormToggle showSignInForm={showSignInForm}>
@@ -54,17 +55,17 @@ interface StyledProps {
 
 const StyledAccountFormToggle = styled.div<StyledProps>`
   max-width: 100vw;
+  min-height: 200px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: white;
-  margin-top: 20px;
+  background: ${Colors.backgroundGrey};
 
   .${Classes.Prompt} {
+    padding: 30px 0;
     cursor: pointer;
-    margin-bottom: 10px;
     color: blue;
     font-weight: bold;
     letter-spacing: 0.02em;

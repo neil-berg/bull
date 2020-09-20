@@ -8,6 +8,7 @@ import { addUser, removeUser } from '../redux/actions';
 import { StoreState } from '../redux/store';
 import {
   AccountFormToggle,
+  Footer,
   LiveTicker,
   PlaceholderTicker,
   StaticTicker,
@@ -91,11 +92,12 @@ export const Landing = () => {
         </Heading>
       </div>
 
-      <button onClick={handleClick}>Add User</button>
+      {/* <button onClick={handleClick}>Add User</button>
       <button onClick={handleUserClick}>ADD USER</button>
-      <button onClick={() => dispatch(removeUser())}>Remove USER</button>
+      <button onClick={() => dispatch(removeUser())}>Remove USER</button> */}
       {/* {isTradingDate() ? <LiveTicker /> : <StaticTicker />} */}
       {user.id ? <h1>MY STOCKS TODO</h1> : <AccountFormToggle />}
+      <Footer />
     </StyledLanding>
   );
 };

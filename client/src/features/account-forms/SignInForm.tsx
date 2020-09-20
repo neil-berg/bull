@@ -1,17 +1,15 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import axios, { AxiosError } from 'axios';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { useDispatch } from 'react-redux';
 
 import { addUser } from '../../redux/actions';
-import { AccountForm, TextSpan } from '../../components';
+import { Input, TextSpan } from '../../components';
 import { ErrorCode, User } from '../../types';
+import { Colors } from '../../styles';
 
 const Copy = defineMessages({
-  WelcomeBack: {
-    id: 'WelcomeBack',
-    defaultMessage: 'Welcome back!',
-  },
   ErrorInvalidCredetials: {
     id: 'ErrorInvalidCredentials',
     defaultMessage: 'Incorrect credentials.',
@@ -22,11 +20,14 @@ const Copy = defineMessages({
   },
   SignInFormSubmit: {
     id: 'SignInFormSubmit',
-    defaultMessage: 'Submit',
+    defaultMessage: 'Sign In',
   },
 });
 
 const enum Classes {
+  FormContainer = 'sign-in-form-container',
+  InputContainer = 'sign-in-form-input-container',
+  ErrorContainer = 'sign-in-form-error-container',
   ErrorMessage = 'sign-in-form-error-message',
 }
 
@@ -70,60 +71,98 @@ export const SignInForm = () => {
     setProcessSubmit(false);
   };
 
+  const disableButton = !email || !password;
+
   return (
-    <AccountForm
+    <StyledSignInForm
+      errorMessage={!!errorMessage}
       onSubmit={(e) => handleSubmit(e)}
       data-testid={SignInFormTestID.Form}
     >
-      <TextSpan
-        style={{
-          fontSize: '24px',
-          textAlign: 'center',
-          marginBottom: '30px',
-        }}
-      >
-        <FormattedMessage {...Copy.WelcomeBack} />
-      </TextSpan>
-      <label htmlFor='email'>Email</label>
-      <input
-        type='email'
-        id='email'
-        placeholder='Enter email'
-        autoComplete='email'
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        data-testid={SignInFormTestID.UserNameInput}
-      />
-      <label htmlFor='password'>Password</label>
-      <input
-        type='password'
-        id='password'
-        placeholder='Enter password'
-        autoComplete='current-password'
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        data-testid={SignInFormTestID.PasswordInput}
-      />
-      {errorMessage ? (
-        <TextSpan
-          className={Classes.ErrorMessage}
-          data-testid={SignInFormTestID.ErrorMessage}
+      <div className={Classes.FormContainer}>
+        <Input>
+          <label htmlFor='email'>Email</label>
+          <input
+            type='email'
+            id='email'
+            placeholder='Enter email'
+            autoComplete='email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            data-testid={SignInFormTestID.UserNameInput}
+          />
+        </Input>
+        <Input>
+          <label htmlFor='password'>Password</label>
+          <input
+            type='password'
+            id='password'
+            placeholder='Enter password'
+            autoComplete='current-password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            data-testid={SignInFormTestID.PasswordInput}
+          />
+        </Input>
+        <button
+          type='submit'
+          disabled={disableButton}
+          style={{
+            cursor: disableButton ? 'auto' : 'pointer',
+          }}
+          data-testid={SignInFormTestID.SubmitButton}
         >
-          {errorMessage}
-        </TextSpan>
-      ) : (
-        <TextSpan className={Classes.ErrorMessage}>{''}</TextSpan>
-      )}
-      <button
-        type='submit'
-        disabled={processSubmit}
-        style={{
-          cursor: processSubmit ? 'auto' : 'pointer',
-        }}
-        data-testid={SignInFormTestID.SubmitButton}
+          <FormattedMessage {...Copy.SignInFormSubmit} />
+        </button>
+      </div>
+      <TextSpan
+        className={Classes.ErrorMessage}
+        data-testid={SignInFormTestID.ErrorMessage}
       >
-        <FormattedMessage {...Copy.SignInFormSubmit} />
-      </button>
-    </AccountForm>
+        {errorMessage ? errorMessage : ''}
+      </TextSpan>
+    </StyledSignInForm>
   );
 };
+
+interface StyledProps {
+  errorMessage: boolean;
+}
+
+const StyledSignInForm = styled.form<StyledProps>`
+  .${Classes.FormContainer} {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  button {
+    height: 46px;
+    padding: 10px;
+    background: black;
+    color: ${Colors.mintGreen};
+    border-color: black;
+    border-radius: 4px;
+  }
+
+  .${Classes.ErrorMessage} {
+    font-size: 14px;
+    font-weight: bold;
+    color: ${Colors.errorRed};
+    margin-top: 20px;
+    line-height: 16px;
+    min-height: 16px;
+    visibility: ${(props) => (props.errorMessage ? 'visible' : 'hidden')};
+  }
+
+  @media screen and (max-width: 900px) {
+    .${Classes.FormContainer} {
+      flex-direction: column;
+    }
+
+    button {
+      width: 225px;
+    }
+  }
+`;

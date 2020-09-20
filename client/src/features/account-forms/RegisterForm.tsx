@@ -1,11 +1,13 @@
 import * as React from 'react';
+import styled from 'styled-components';
 import axios, { AxiosError } from 'axios';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { useDispatch } from 'react-redux';
 
-import { AccountForm, TextSpan } from '../../components';
+import { Input, TextSpan } from '../../components';
 import { addUser } from '../../redux/actions';
 import { ErrorCode, User } from '../../types';
+import { Colors } from '../../styles';
 
 const Copy = defineMessages({
   ErrorInvalidUserName: {
@@ -26,11 +28,13 @@ const Copy = defineMessages({
   },
   RegisterFormSubmit: {
     id: 'Submit',
-    defaultMessage: 'Submit',
+    defaultMessage: 'Sign Up',
   },
 });
 
 const enum Classes {
+  FormContainer = 'create-account-form-container',
+  InputContainer = 'create-account-form-input-container',
   ErrorMessage = 'create-account-form-error-message',
 }
 
@@ -96,61 +100,110 @@ export const RegisterForm = () => {
     }
   };
 
+  const disableButton = !email || !userName || !password;
+
   return (
-    <AccountForm
+    <StyledRegisterForm
+      errorMessage={!!errorMessage}
       onSubmit={(e) => handleSubmit(e)}
       data-testid={RegisterFormTestID.Form}
     >
-      <label htmlFor='email'>Email</label>
-      <input
-        type='email'
-        id='email'
-        placeholder='Enter email'
-        autoComplete='email'
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        required
-        data-testid={RegisterFormTestID.EmailInput}
-      />
-      <label htmlFor='username'>User Name</label>
-      <input
-        type='text'
-        id='username'
-        placeholder='Enter user name'
-        autoComplete='username'
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-        required
-        data-testid={RegisterFormTestID.UserNameInput}
-      />
-      <label htmlFor='password'>Password</label>
-      <input
-        type='password'
-        id='password'
-        placeholder='Enter password'
-        autoComplete='current-password'
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        data-testid={RegisterFormTestID.PasswordInput}
-      />
-      {errorMessage ? (
-        <TextSpan className={Classes.ErrorMessage}>{errorMessage}</TextSpan>
-      ) : (
-        <TextSpan className={Classes.ErrorMessage}>{''}</TextSpan>
-      )}
-      <button
-        type='submit'
-        disabled={processSubmit}
-        style={{
-          cursor: processSubmit ? 'auto' : 'pointer',
-        }}
-        data-testid={RegisterFormTestID.SubmitButton}
-      >
-        <TextSpan>
+      <div className={Classes.FormContainer}>
+        <Input>
+          <label htmlFor='email'>Email</label>
+          <input
+            type='email'
+            id='email'
+            placeholder='Enter email'
+            autoComplete='email'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            data-testid={RegisterFormTestID.EmailInput}
+          />
+        </Input>
+        <Input>
+          <label htmlFor='username'>User Name</label>
+          <input
+            type='text'
+            id='username'
+            placeholder='Enter user name'
+            autoComplete='username'
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+            required
+            data-testid={RegisterFormTestID.UserNameInput}
+          />
+        </Input>
+        <Input>
+          <label htmlFor='password'>Password</label>
+          <input
+            type='password'
+            id='password'
+            placeholder='Enter password'
+            autoComplete='current-password'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            data-testid={RegisterFormTestID.PasswordInput}
+          />
+        </Input>
+        <button
+          type='submit'
+          disabled={disableButton}
+          style={{
+            cursor: disableButton ? 'auto' : 'pointer',
+          }}
+          data-testid={RegisterFormTestID.SubmitButton}
+        >
           <FormattedMessage {...Copy.RegisterFormSubmit} />
-        </TextSpan>
-      </button>
-    </AccountForm>
+        </button>
+      </div>
+      <TextSpan className={Classes.ErrorMessage}>
+        {errorMessage ? errorMessage : ''}
+      </TextSpan>
+    </StyledRegisterForm>
   );
 };
+
+interface StyledProps {
+  errorMessage: boolean;
+}
+
+const StyledRegisterForm = styled.form<StyledProps>`
+  .${Classes.FormContainer} {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  button {
+    height: 46px;
+    padding: 10px;
+    background: black;
+    color: ${Colors.mintGreen};
+    border-color: black;
+    border-radius: 4px;
+  }
+
+  .${Classes.ErrorMessage} {
+    font-size: 14px;
+    font-weight: bold;
+    color: ${Colors.errorRed};
+    margin-top: 20px;
+    line-height: 16px;
+    min-height: 16px;
+    visibility: ${(props) => (props.errorMessage ? 'visible' : 'hidden')};
+  }
+
+  @media screen and (max-width: 900px) {
+    .${Classes.FormContainer} {
+      flex-direction: column;
+    }
+
+    button {
+      width: 225px;
+    }
+  }
+`;
