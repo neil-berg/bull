@@ -15,14 +15,6 @@ const Copy = defineMessages({
     id: 'SignInPrompt',
     defaultMessage: 'Have an account? Sign in here.',
   },
-  SignIn: {
-    id: 'SignIn',
-    defaultMessage: 'Sign In',
-  },
-  Register: {
-    id: 'Register',
-    defaultMessage: 'Register',
-  },
 });
 
 const enum Classes {

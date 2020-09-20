@@ -12,7 +12,7 @@ import { Colors } from '../../styles';
 const Copy = defineMessages({
   ErrorInvalidCredetials: {
     id: 'ErrorInvalidCredentials',
-    defaultMessage: 'Incorrect credentials.',
+    defaultMessage: 'Incorrect email or password.',
   },
   ErrorGeneric: {
     id: 'ErrorGenericSignIn',
@@ -45,13 +45,16 @@ export const SignInForm = () => {
   const [errorMessage, setErrorMessage] = React.useState<JSX.Element | null>(
     null,
   );
-  const [processSubmit, setProcessSubmit] = React.useState(false);
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (!email && !password) {
+      setErrorMessage(null);
+    }
+  }, [email, password]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setProcessSubmit(true);
-
     try {
       const url = process.env.API_URL + '/api/users/signin';
       const res = await axios.post<User>(url, {
@@ -59,16 +62,12 @@ export const SignInForm = () => {
         password,
       });
       dispatch(addUser({ id: res.data.id, userName: res.data.userName }));
-
-      setProcessSubmit(false);
     } catch (e) {
       const err = e as AxiosError<{ errorCode: number }>;
       err.response.data.errorCode === ErrorCode.INVALID_CREDENTIALS
         ? setErrorMessage(<FormattedMessage {...Copy.ErrorInvalidCredetials} />)
         : setErrorMessage(<FormattedMessage {...Copy.ErrorGeneric} />);
-      setProcessSubmit(false);
     }
-    setProcessSubmit(false);
   };
 
   const disableButton = !email || !password;
@@ -119,7 +118,7 @@ export const SignInForm = () => {
         className={Classes.ErrorMessage}
         data-testid={SignInFormTestID.ErrorMessage}
       >
-        {errorMessage ? errorMessage : ''}
+        {errorMessage ? errorMessage : 'A'}
       </TextSpan>
     </StyledSignInForm>
   );

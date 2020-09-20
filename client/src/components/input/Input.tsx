@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const Input = (props: React.PropsWithChildren<Props>) => {
-  return <StyledInput>{props.children}</StyledInput>;
+  return <StyledInput {...props}>{props.children}</StyledInput>;
 };
 
 const StyledInput = styled.div`
@@ -27,6 +27,7 @@ const StyledInput = styled.div`
   }
 
   > input {
+    height: 46px;
     padding: 12px 14px;
     border: 2px black solid;
     border-radius: 4px;

@@ -4,6 +4,7 @@ import axios from 'axios';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 
+import { Account } from '../features/';
 import { addUser, removeUser } from '../redux/actions';
 import { StoreState } from '../redux/store';
 import {
@@ -47,27 +48,6 @@ export const Landing = () => {
   const user = useSelector((state: StoreState) => state.user);
   const dispatch = useDispatch();
 
-  const handleClick = async () => {
-    try {
-      const url = process.env.API_URL + '/api/users';
-      const res = await axios.post(url, {
-        name: 'testing A3',
-      });
-      console.log(res);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
-  const handleUserClick = () => {
-    dispatch(
-      addUser({
-        id: '123',
-        userName: 'neillll',
-      }),
-    );
-  };
-
   return (
     <StyledLanding>
       <PlaceholderTicker />
@@ -92,11 +72,8 @@ export const Landing = () => {
         </Heading>
       </div>
 
-      {/* <button onClick={handleClick}>Add User</button>
-      <button onClick={handleUserClick}>ADD USER</button>
-      <button onClick={() => dispatch(removeUser())}>Remove USER</button> */}
       {/* {isTradingDate() ? <LiveTicker /> : <StaticTicker />} */}
-      {user.id ? <h1>MY STOCKS TODO</h1> : <AccountFormToggle />}
+      {user.id ? <Account /> : <AccountFormToggle />}
       <Footer />
     </StyledLanding>
   );

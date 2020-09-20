@@ -53,8 +53,13 @@ export const RegisterForm = () => {
   const [errorMessage, setErrorMessage] = React.useState<
     JSX.Element | string | null
   >(null);
-  const [processSubmit, setProcessSubmit] = React.useState(false);
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    if (!email && !userName && !password) {
+      setErrorMessage(null);
+    }
+  }, [email, userName, password]);
 
   const clearFields = () => {
     setEmail('');
@@ -67,17 +72,14 @@ export const RegisterForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setProcessSubmit(true);
 
     if (userName.length === 0) {
       setErrorMessage(<FormattedMessage {...Copy.ErrorInvalidUserName} />);
-      setProcessSubmit(false);
       return;
     }
 
     if (password.length < MIN_PASSWORD_LENGTH) {
       setErrorMessage(<FormattedMessage {...Copy.ErrorInvalidPassword} />);
-      setProcessSubmit(false);
       return;
     }
 
@@ -90,13 +92,11 @@ export const RegisterForm = () => {
       });
       dispatch(addUser({ id: res.data.id, userName }));
       clearFields();
-      setProcessSubmit(false);
     } catch (e) {
       const err: AxiosError<{ errorCode: number }> = e;
       err.response.data.errorCode === ErrorCode.EMAIL_ALREADY_TAKEN
         ? setErrorMessage(<FormattedMessage {...Copy.ErrorEmailTaken} />)
         : setErrorMessage(<FormattedMessage {...Copy.ErrorCreatingUser} />);
-      setProcessSubmit(false);
     }
   };
 
@@ -160,7 +160,7 @@ export const RegisterForm = () => {
         </button>
       </div>
       <TextSpan className={Classes.ErrorMessage}>
-        {errorMessage ? errorMessage : ''}
+        {errorMessage ? errorMessage : 'A'}
       </TextSpan>
     </StyledRegisterForm>
   );
