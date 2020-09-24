@@ -70,9 +70,11 @@ module.exports = (env) => {
       }),
       // Set environmental vars
       new webpack.EnvironmentPlugin({
-       API_URL: isDev ? 'http://localhost:3000' : 'https://my-bull-app.herokuapp.com',
-       FINNHUB_API_TOKEN: process.env.FINNHUB_API_TOKEN,
-      })
+        API_URL: isDev
+          ? 'http://localhost:3000'
+          : 'https://my-bull-app.herokuapp.com',
+        FINNHUB_API_TOKEN: process.env.FINNHUB_API_TOKEN,
+      }),
     ],
     // Increase source mapping in development
     devtool: isDev ? 'eval-source-map' : 'eval',
@@ -89,10 +91,11 @@ module.exports = (env) => {
       historyApiFallback: true,
       // Proxy API requests to the backend locally
       proxy: {
-        '/api/**': {
-            target: 'http://localhost:3000',
+        '/api': {
+          target: 'http://bull-api:3000',
+          secure: false,
         },
-    }
+      },
     },
   };
 

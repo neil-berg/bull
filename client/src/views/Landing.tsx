@@ -1,6 +1,6 @@
 import * as React from 'react';
-import styled from 'styled-components';
 import axios from 'axios';
+import styled from 'styled-components';
 import { FormattedMessage, defineMessages } from 'react-intl';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -18,6 +18,7 @@ import BullIcon from '../assets/svgs/rising.svg';
 import { isTradingDate } from '../util';
 import { Colors } from '../styles';
 import { Heading } from '../components';
+import Axios from 'axios';
 
 const Copy = defineMessages({
   Title: {
@@ -46,7 +47,24 @@ const enum Classes {
 
 export const Landing = () => {
   const user = useSelector((state: StoreState) => state.user);
-  const dispatch = useDispatch();
+
+  const handleClick = async () => {
+    try {
+      const res = await axios.get('/api/users/test');
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleCookie = async () => {
+    try {
+      const res = await axios.post(process.env.API_URL + '/cookie');
+      console.log(res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <StyledLanding>
@@ -71,7 +89,8 @@ export const Landing = () => {
           <FormattedMessage {...Copy.Tagline} />
         </Heading>
       </div>
-
+      <button onClick={handleClick}>GET TEST</button>
+      <button onClick={handleCookie}>HANDLE COOKIE</button>
       {/* {isTradingDate() ? <LiveTicker /> : <StaticTicker />} */}
       {user.id ? <Account /> : <AccountFormToggle />}
       <Footer />

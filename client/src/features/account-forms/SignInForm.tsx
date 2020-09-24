@@ -57,10 +57,14 @@ export const SignInForm = () => {
     e.preventDefault();
     try {
       const url = process.env.API_URL + '/api/users/signin';
-      const res = await axios.post<User>(url, {
-        email,
-        password,
-      });
+      const res = await axios.post<User>(
+        url,
+        {
+          email,
+          password,
+        },
+        { withCredentials: true },
+      );
       dispatch(addUser({ id: res.data.id, userName: res.data.userName }));
     } catch (e) {
       const err = e as AxiosError<{ errorCode: number }>;

@@ -84,12 +84,16 @@ export const RegisterForm = () => {
     }
 
     try {
-      const url = process.env.API_URL + '/api/users/create';
-      const res = await axios.post<User>(url, {
-        email,
-        userName,
-        password,
-      });
+      const url = '/api/users/create';
+      const res = await axios.post<User>(
+        url,
+        {
+          email,
+          userName,
+          password,
+        },
+        { withCredentials: true },
+      );
       dispatch(addUser({ id: res.data.id, userName }));
       clearFields();
     } catch (e) {
