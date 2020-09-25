@@ -59,7 +59,7 @@ export const Landing = () => {
 
   const handleCookie = async () => {
     try {
-      const res = await axios.post(process.env.API_URL + '/cookie');
+      const res = await axios.post('/api/users/cookie');
       console.log(res);
     } catch (e) {
       console.log(e);

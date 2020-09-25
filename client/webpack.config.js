@@ -89,10 +89,12 @@ module.exports = (env) => {
       hot: true,
       // Serve index.html on 404s
       historyApiFallback: true,
-      // Proxy API requests to the backend locally
+      // Proxy API requests to the backend 
+      // Important to use container name (server) for the host
       proxy: {
         '/api': {
-          target: 'http://bull-api:3000',
+          target: 'http://server:3000',
+          disableHostCheck: true,
           secure: false,
         },
       },

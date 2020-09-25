@@ -23,17 +23,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 app.get('/api/users/test', (_, res) => {
-  // const token = util.generateToken('abc');
-  // res.cookie('jwt', token, {
-  //   httpOnly: true,
-  //   expires: new Date(Date.now() + 9000000),
-  // });
+  const token = util.generateToken('abc');
+  res.cookie('jwt', token, {
+    httpOnly: true,
+    expires: new Date(Date.now() + 9000000),
+  });
   res.status(200).send({ id: '123' });
   // res.send('From Bull API!');
   // res.status(200);
 });
 
-app.post('/cookie', async (req, res) => {
+app.post('/api/users/cookie', (req, res) => {
   console.log(req.cookies);
   res.status(200).send('ok');
 });

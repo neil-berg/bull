@@ -1,8 +1,10 @@
 version: '3'
 
+networks:
+  app:
+
 services:
   server:
-    container_name: bull-api
     restart: always
     build: ./server
     env_file: .env
@@ -25,7 +27,6 @@ services:
     command: yarn dev
 
   mongo:
-    container_name: mongo
     image: mongo
     env_file: .env
     environment: 
@@ -40,7 +41,6 @@ services:
       - ./server/src/db/init.js:/docker-entrypoint-initdb.d/init.js:ro
 
   client:
-    container_name: bull-client
     restart: on-failure
     build: ./client
     env_file: .env
@@ -50,10 +50,10 @@ services:
       - '8000:8000'
     depends_on: 
       - server
+    networks:
+      - app
     volumes:
       - ./client/:/usr/src/app
       - /usr/src/app/node_modules
     command: yarn dev
 
-networks:
-  app:
