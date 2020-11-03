@@ -82,50 +82,96 @@ const user = await User.findOne({
 
 ## Client
 
+The web client is written in React/Typescript using Redux for managing global
+state in the app.
+
+### Internationalization
+
+The client uses [React Intl](https://formatjs.io/docs/getting-started/installation/)
+to create internationalized text and numbers.
+
+### Real-time UI updates
+
+A live [stock ticker](https://github.com/neil-berg/bull/blob/master/client/src/features/ticker/LiveTicker.tsx)
+(during trading hours) is created using websockets.
+
+Websocket connections can be established in a few lines of code using React hooks.
+
+```js
+React.useEffect(() => {
+  const url = `wss://ws.finnhub.io?token=${your-api-token}`;
+  ws.current = new WebSocket(url);
+
+  // Subscribe to AAPL stock when the ws connection opens
+  ws.current.onopen = () => {
+    ws.current.send(JSON.stringify({ type: 'subscribe', 'AAPL' }));
+  };
+
+  // Handling any logic when the connection closes
+  ws.current.onclose = () => console.log('Connection closed');
+
+  // Listen for messages
+  ws.current.onmessage = (e: MessageEvent) => {
+    const { data } = JSON.parse(e.data);
+    const { s: symbol, p: price, t: timestamp } = data[0];
+    console.log(`${s}: $${price} at time ${t}`);
+  };
+
+  // Unsubscribe to the trades when the component unmounts
+  return () => {
+    ws.current.send(JSON.stringify({ type: 'unsubscribe', 'AAPL' }));
+  };
+}, []);
+```
+
+### Unit tests
+
+Unit tests are performed using Jest and React Testing Library.
+
 ## Development
 
-Install Docker and docker-compose.
+To develop Bull locally, first make sure that you have [Docker](https://docs.docker.com/get-docker/)
+and [docker-compose](https://docs.docker.com/compose/install/) installed.
 
-Clone the repository.
+Then clone and enter the repository.
 
-```
+```sh
+git clone https://github.com/neil-berg/bull.git
 cd bull
 ```
 
-Bring up the web client, node server, and mongo DB with
+Bring up the web client, node server, and Mongo DB with
 
-```
+```sh
 docker-compose up --build
-```
-
-To bring down the containers:
-
-```
-docker-compose down
 ```
 
 The web client is served at `http://localhost:8000`, and the
 node server is at `http://localhost:3000`.
 
+To bring down the containers:
+
+```sh
+docker-compose down
+```
+
 ## Deployment
 
-### Deploying the web client
+Enter into the `client` folder:
 
-1. Enter into the `client` folder:
-
-```
-cd client
+```sh
+cd bull/client
 ```
 
-2. Build the client
+Build the client:
 
-```
+```sh
 yarn build
 ```
 
-3. Manually deploy to Netlify
+Deploy to Netlify
 
-```
+```sh
 netlify deploy
 ```
 
@@ -133,7 +179,7 @@ When prompted about which directory to publish, enter `dist`.
 
 NOTE: It is important to have a `netlify.toml` file created in the client's root.
 
-Inside of `netlify.toml`, we specify the redirect rule to suit our SPA:
+Inside of `netlify.toml`, we specify the redirect rule suitable for an SPA:
 
 ```
 [[redirects]]
