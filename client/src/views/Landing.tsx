@@ -68,7 +68,9 @@ export const Landing = () => {
 
   return (
     <StyledLanding>
-      <PlaceholderTicker />
+      {/* <PlaceholderTicker /> */}
+      {/* {isTradingDate() ? <LiveTicker /> : <StaticTicker />} */}
+      {<StaticTicker />}
       <div className={Classes.HeadingContainer}>
         <Heading
           size='xl'
@@ -91,7 +93,6 @@ export const Landing = () => {
       </div>
       <button onClick={handleClick}>GET TEST</button>
       <button onClick={handleCookie}>HANDLE COOKIE</button>
-      {/* {isTradingDate() ? <LiveTicker /> : <StaticTicker />} */}
       {user.id ? <Account /> : <AccountFormToggle />}
       <Footer />
     </StyledLanding>

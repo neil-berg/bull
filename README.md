@@ -38,7 +38,7 @@ export const finnhub = axios.create({
 });
 ```
 
-This instancen can be used, for instance, to fetch Apple stock data with:
+This instance can be used, for instance, to fetch Apple stock data with:
 
 ```js
 const response = await finnhub.get('quote?symbol=AAPL');
@@ -169,13 +169,19 @@ Build the client:
 yarn build
 ```
 
-Deploy to Netlify
+Preview the deployment:
 
 ```sh
 netlify deploy
 ```
 
 When prompted about which directory to publish, enter `dist`.
+
+Verify deployment looks good and then:
+
+```sh
+netlify deploy --prod
+```
 
 NOTE: It is important to have a `netlify.toml` file created in the client's root.
 
